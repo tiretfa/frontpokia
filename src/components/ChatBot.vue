@@ -8,7 +8,7 @@
         },
         data(){
             return{
-                input:'',
+                question:'',
                 messages: [
                     {"type":0, "message":"Bonjour, ça va?"},
                     {"type":1, "message":"Ouai bah nickel!"},
@@ -19,10 +19,9 @@
         },
         methods: {
             ask(question){
-                console.log(this.messages)
-                this.messages.append({"type":0, "message": question})
-                this.messages.append({"type":1, "message": "blablabla"})
-                this.input = ''
+                this.messages.push({"type":0, "message": question})
+                this.messages.push({"type":1, "message": "blablabla"})
+                this.question = ''
             }
         }
     }
@@ -36,8 +35,7 @@
       :message="m.message"
     />
   </div>
-    <div contenteditable="True" v-bind="input"></div>
-    <button @click="ask('bye')"> Send</button>
+    <input v-model="question" placeholder="écrit moi dessus" v-on:keyup.enter="ask(question)"></input>
 </template>
 
 <style scoped>

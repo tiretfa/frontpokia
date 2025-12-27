@@ -6,7 +6,7 @@
 </script>
 
 <template>
-  <div>Je suis un ChatBotMessage de type: {{ message }}</div>
+  <div>Q: {{ message }}</div>
 </template>
 
 <style scoped>
