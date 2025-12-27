@@ -1,6 +1,7 @@
 <script>
     import ChatBotAnswer from './ChatBotAnswer.vue';
     import ChatBotQuestion from './ChatBotQuestion.vue';
+    import axios from 'axios';
     export default{
         components:{
             ChatBotAnswer,
@@ -20,7 +21,9 @@
         methods: {
             ask(question){
                 this.messages.push({"type":0, "message": question})
-                this.messages.push({"type":1, "message": "blablabla"})
+                axios.get('http://localhost:8000').then(response =>{
+                    this.messages.push({"type":1, "message": response.data.Hello});
+                })
                 this.question = ''
             }
         }
