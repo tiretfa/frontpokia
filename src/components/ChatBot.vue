@@ -10,19 +10,14 @@
         data(){
             return{
                 question:'',
-                messages: [
-                    {"type":0, "message":"Bonjour, ça va?"},
-                    {"type":1, "message":"Ouai bah nickel!"},
-                    {"type":0, "message":"Parfait"},
-                    {"type":1, "message":"Bah ouai Parfait"},
-                ]
+                messages: []
             }
         },
         methods: {
             ask(question){
                 this.messages.push({"type":0, "message": question})
-                axios.get('http://localhost:8000').then(response =>{
-                    this.messages.push({"type":1, "message": response.data.Hello});
+                axios.post('http://localhost:8000/chatbot', {'q':question}).then(response =>{
+                    this.messages.push({"type":1, "message": response.data.answer});
                 })
                 this.question = ''
             }
