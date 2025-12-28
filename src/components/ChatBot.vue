@@ -10,14 +10,28 @@
         data(){
             return{
                 question:'',
-                messages: []
+                messages: [],
+                isLoading: false
             }
         },
         methods: {
-            ask(question){
+            async ask(question){
                 this.messages.push({"type":0, "message": question})
-                axios.post('http://localhost:8000/chatbot', {'q':question}).then(response =>{
-                    this.messages.push({"type":1, "message": response.data.answer});
+                let answer = ''
+                const response = await axios.post(
+                    'http://localhost:8000/chatbot',
+                    {'q':question},
+                    {
+                        responseType: 'stream',
+                        onDownloadProgress: (progressEvent) => {
+                            const dataChunk = progressEvent.event.target.response
+                            answer += dataChunk
+                        }
+                    }
+                )
+                .finally(()=>{
+                    this.messages.push({"type":1, "message": answer});
+                    this.isLoading = false
                 })
                 this.question = ''
             }
