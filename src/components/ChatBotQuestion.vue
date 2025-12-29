@@ -1,12 +1,12 @@
 <script>
     export default{
-        props:['message']
+        props:['question']
     }
     
 </script>
 
 <template>
-  <div>Q: {{ message }}</div>
+    <div>Q: {{ question }}</div>
 </template>
 
 <style scoped>
