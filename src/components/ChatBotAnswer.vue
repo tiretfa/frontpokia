@@ -11,28 +11,29 @@
         created(){
             this.ask()
         },
-        watch:{
-            answer(newAnswer){
-                this.answer = newAnswer
-            }
-        },
         methods:{
             async ask() {
                 this.isLoading = true
-                await axios.post(
-                    'http://localhost:8000/chatbot',
-                    { 'q': this.question },
-                    {
-                        responseType: 'stream',
-                        onDownloadProgress: (progressEvent) => {
-                            const dataChunk = progressEvent.event.target.response
-                            this.answer += dataChunk
-                        }
-                    }
-                )
-                .finally(()=>{
-                    this.isLoading = false
+                const response = await fetch('http://localhost:8000/chatbot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ q: this.question })
                 })
+
+                const reader = response.body.getReader()
+                const decoder = new TextDecoder('utf-8')
+
+                while (true) {
+                    const { value, done } = await reader.read()
+                    if (done) break
+
+                    let chunk = decoder.decode(value, { stream: true })
+                    this.answer += chunk.replace(/\n/g, '')
+                }
+
+                this.isLoading = false
             }
         }
         
